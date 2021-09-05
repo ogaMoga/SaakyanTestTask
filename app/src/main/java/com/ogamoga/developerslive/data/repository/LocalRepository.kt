@@ -14,7 +14,7 @@ class LocalRepository(
     suspend fun getLast(sectionType: SectionType): Item {
         val result = dao.getLastItem(sectionType)
 
-        if (result != null && result.id != 0) {
+        if (result != null) {
             return itemFromEntity(result, sectionType)
         } else {
             throw DatabaseException()

@@ -36,48 +36,56 @@ class ItemUseCase(
     }
 
     private suspend fun loadAndUpdate(sectionType: SectionType, isFirstLoad: Boolean): ItemResource {
-        if (sectionType == SectionType.RANDOM) {
-            return try {
-                val item = remoteRepository.getRandomItem()
-                val result = Item(
-                    id = item.id,
-                    url = item.gifURL.replace("http", "https", true),
-                    description = item.description,
-                    !isFirstLoad
-                )
-
-                localRepository.addItems(listOf(result), sectionType)
-                ItemResource(Status.SUCCESS, result, sectionType)
-            } catch(e: Exception) {
-                ItemResource(Status.ERROR, null, sectionType)
-            }
+        return if (sectionType == SectionType.RANDOM) {
+            loadAndUpdateRandom(sectionType, isFirstLoad)
         } else {
-            val currentPage = localRepository.incrementAndGetPageNumber(sectionType)
-            val remoteData: ApiPage?
-            val result = mutableListOf<Item>()
-            try {
-                remoteData = remoteRepository.getPage(currentPage, sectionType)
-                for (item in remoteData.result) {
-                    result.add(Item(
+            loadAndUpdatePage(sectionType, isFirstLoad)
+        }
+    }
+
+    private suspend fun loadAndUpdatePage(sectionType: SectionType, isFirstLoad: Boolean): ItemResource {
+        val currentPage = localRepository.incrementAndGetPageNumber(sectionType)
+        val remoteData: ApiPage?
+        val result = mutableListOf<Item>()
+        try {
+            remoteData = remoteRepository.getPage(currentPage, sectionType)
+            for (item in remoteData.result) {
+                result.add(
+                    Item(
                         id = item.id,
                         url = item.gifURL.replace("http", "https", true),
                         description = item.description,
                         true
-                    ))
-                }
-                localRepository.setSectionLimit(sectionType, currentPage, remoteData.totalCount / 5)
-
-                return if (result.isEmpty()) {
-                    ItemResource(Status.ERROR, null, sectionType)
-                } else {
-                    result[0].hasPrevious = !isFirstLoad
-                    localRepository.addItems(result, sectionType)
-                    ItemResource(Status.SUCCESS, result[0], sectionType)
-                }
-            } catch(e: Exception) {
-                return ItemResource(Status.ERROR, null, sectionType)
+                    )
+                )
             }
+            localRepository.setSectionLimit(sectionType, currentPage, remoteData.totalCount / 5)
+
+            return if (result.isEmpty()) {
+                ItemResource(Status.ERROR, null, sectionType)
+            } else {
+                result[0].hasPrevious = !isFirstLoad
+                localRepository.addItems(result, sectionType)
+                ItemResource(Status.SUCCESS, result[0], sectionType)
+            }
+        } catch (e: Exception) {
+            return ItemResource(Status.ERROR, null, sectionType)
         }
+    }
+
+    private suspend fun loadAndUpdateRandom(sectionType: SectionType, isFirstLoad: Boolean) = try {
+        val item = remoteRepository.getRandomItem()
+        val result = Item(
+            id = item.id,
+            url = item.gifURL.replace("http", "https", true),
+            description = item.description,
+            !isFirstLoad
+        )
+
+        localRepository.addItems(listOf(result), sectionType)
+        ItemResource(Status.SUCCESS, result, sectionType)
+    } catch (e: Exception) {
+        ItemResource(Status.ERROR, null, sectionType)
     }
 }
 

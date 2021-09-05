@@ -28,7 +28,7 @@ interface Dao {
     suspend fun getPrevious(currentId: Int, sectionType: SectionType): ItemsEntity
 
     @Query(
-        "SELECT items.id, coalesce(items.url, \"\") as url, coalesce(items.description, \"\") as description " +
+        "SELECT coalesce(items.id, 0) as id, coalesce(items.url, \"\") as url, coalesce(items.description, \"\") as description " +
               "FROM links LEFT JOIN items ON items.id = (" +
                 "SELECT nextId " +
                 "FROM links " +
