@@ -8,13 +8,13 @@
         android:id="@+id/item__error_holder"
         android:visibility="invisible"
         layout="@layout/error"
-    />
+        />
 
     <include
         android:id="@+id/item__success_holder"
         android:visibility="invisible"
         layout="@layout/success"
-    />
+        />
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/item__progress_bar"
