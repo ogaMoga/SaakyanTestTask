@@ -11,15 +11,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="wrap_content"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         app:cardCornerRadius="8dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cv_constraint"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/cv_constraint">
+            android:layout_height="match_parent">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/item__card__image"
@@ -34,7 +34,7 @@
                 android:id="@+id/item__card_description"
                 app:layout_constraintStart_toStartOf="@id/item__card__image"
                 app:layout_constraintEnd_toEndOf="@id/item__card__image"
-                app:layout_constraintBottom_toBottomOf="@id/item__card__image"
+                app:layout_constraintTop_toBottomOf="@id/item__card__image"
                 style="@style/descriptionText"
                 tools:text="Very-very-very-very-very-very-very long description"
                 />
@@ -42,17 +42,17 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.appcompat.widget.AppCompatImageButton
-        app:layout_constraintHorizontal_chainStyle="packed"
         android:id="@+id/item__previous_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_shadow"
-        android:src="@drawable/ic_baseline_back"
-        android:tint="@color/yellow"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintEnd_toStartOf="@+id/item__next_btn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/item__next_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
+        android:background="@drawable/round_shadow"
+        android:src="@drawable/ic_baseline_back"
+        android:tint="@color/yellow"
         android:visibility="gone"
         />
     <androidx.appcompat.widget.AppCompatImageButton
@@ -62,10 +62,10 @@
         app:layout_constraintTop_toBottomOf="@id/item__card"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="10dp"
         android:background="@drawable/round_shadow"
         android:src="@drawable/ic_baseline_next"
         android:tint="@color/green"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="10dp"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

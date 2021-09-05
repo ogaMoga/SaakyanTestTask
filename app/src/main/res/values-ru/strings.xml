@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">DevelopersLive</string>
+    <string name="fragment__main__title">Developers Life</string>
+    <string name="error_text">Произошла ошибка при загрузке данных. Проверьте подключение к сети.</string>
+    <string name="error_btn">Повторить</string>
+    <string name="latest_tab_title">Последние</string>
+    <string name="top_tab_title">Лучшие</string>
+    <string name="hot_tab_title">Горячие</string>
+</resources>

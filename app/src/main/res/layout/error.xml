@@ -31,5 +31,6 @@
         android:paddingTop="10dp"
         android:textSize="18sp"
         android:fontFamily="@font/montserrat_regular"
+        android:textAllCaps="true"
         />
 </androidx.appcompat.widget.LinearLayoutCompat>

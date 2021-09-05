@@ -6,7 +6,7 @@ import com.ogamoga.developerslive.data.database.AppDatabase
 import com.ogamoga.developerslive.data.database.dao.Dao
 import com.ogamoga.developerslive.data.repository.LocalRepository
 import com.ogamoga.developerslive.data.repository.RemoteRepository
-import com.ogamoga.developerslive.domain.usecase.UseCase
+import com.ogamoga.developerslive.domain.usecase.ItemUseCase
 import com.ogamoga.developerslive.screens.item.ItemViewModel
 import com.ogamoga.developerslive.data.api.ApiFactory
 import org.koin.android.ext.koin.androidApplication
@@ -37,6 +37,6 @@ val repositoryModule = module {
 }
 
 val screenModule = module {
-    single { UseCase(get(), get()) }
+    single { ItemUseCase(get(), get()) }
     viewModel { ItemViewModel(get()) }
 }

@@ -6,13 +6,13 @@
 
     <include
         android:id="@+id/item__error_holder"
-        android:visibility="gone"
+        android:visibility="invisible"
         layout="@layout/error"
     />
 
     <include
         android:id="@+id/item__success_holder"
-        android:visibility="gone"
+        android:visibility="invisible"
         layout="@layout/success"
     />
 
@@ -24,5 +24,6 @@
         android:visibility="visible"
         android:layout_gravity="center"
         />
+
 
 </FrameLayout>

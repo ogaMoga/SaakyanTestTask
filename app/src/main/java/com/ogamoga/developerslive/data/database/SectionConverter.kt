@@ -5,8 +5,8 @@ import com.ogamoga.developerslive.domain.model.SectionType
 
 class SectionConverter {
     @TypeConverter
-    fun toHealth(value: Int) = enumValues<SectionType>()[value]
+    fun toSectionType(value: Int) = enumValues<SectionType>()[value]
 
     @TypeConverter
-    fun fromHealth(value: SectionType) = value.ordinal
+    fun fromSectionType(value: SectionType) = value.ordinal
 }

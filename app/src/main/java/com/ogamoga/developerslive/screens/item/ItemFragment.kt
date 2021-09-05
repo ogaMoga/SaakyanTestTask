@@ -3,7 +3,6 @@ package com.ogamoga.developerslive.screens.item
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.core.widget.ContentLoadingProgressBar
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -22,6 +21,7 @@ import com.bumptech.glide.request.target.Target
 import com.ogamoga.developerslive.App
 import com.ogamoga.developerslive.R
 import com.ogamoga.developerslive.domain.model.Item
+import com.ogamoga.developerslive.domain.model.ItemResource
 import com.ogamoga.developerslive.domain.model.SectionType
 import com.ogamoga.developerslive.domain.model.Status
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -40,9 +40,33 @@ class ItemFragment : Fragment() {
     private lateinit var sectionType: SectionType
     private var currentId: Int? = null
 
-    private lateinit var loadingProgress: CircularProgressDrawable
-
     private val viewModel: ItemViewModel by viewModel()
+    private val liveDataObserver: (t: ItemResource) -> Unit = { itemResource ->
+        if (itemResource.sectionType == sectionType) {
+            when (itemResource.status) {
+                Status.LOADING -> {
+                    setVisibility(isLoading = true)
+                }
+                Status.ERROR -> {
+                    setVisibility(isError = true)
+                }
+                Status.SUCCESS -> {
+                    val item: Item = itemResource.item!!
+                    currentId = item.id
+                    previousButton.visibility =
+                        if (item.hasPrevious) View.VISIBLE else View.GONE
+
+                    Glide.with(requireContext())
+                        .load(item.url)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .listener(glideListener)
+                        .into(image)
+
+                    description.text = item.description
+                }
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,86 +92,19 @@ class ItemFragment : Fragment() {
 
         description.movementMethod = ScrollingMovementMethod()
 
-        loadingProgress = CircularProgressDrawable(requireContext())
-        loadingProgress.strokeWidth = 5f
-        loadingProgress.centerRadius = 30f
-        loadingProgress.start()
+        loadInitialData()
 
-        if (currentId == null) {
-            viewModel.loadLast(sectionType)
-        } else {
-            viewModel.loadCurrent(currentId!!, sectionType)
-        }
+        reloadButton.setOnClickListener { loadInitialData() }
+        previousButton.setOnClickListener { currentId?.let { id -> viewModel.loadPrevious(id, sectionType) } }
+        nextButton.setOnClickListener { currentId?.let { id -> viewModel.loadNext(id, sectionType) } }
 
-        reloadButton.setOnClickListener { viewModel.loadLast(sectionType) }
-
-        viewModel.itemLiveData.observe(viewLifecycleOwner) { itemResource ->
-            if (itemResource.sectionType != sectionType) {
-                return@observe
-            }
-
-            when (itemResource.status) {
-                Status.SUCCESS -> {
-                    val item: Item = itemResource.item!!
-                    currentId = item.id
-                    previousButton.visibility = if (item.hasPrevious) View.VISIBLE else View.GONE
-
-                    Glide.with(requireContext())
-                        .load(item.url)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .listener(object: RequestListener<Drawable> {
-                            override fun onLoadFailed(
-                                e: GlideException?,
-                                model: Any?,
-                                target: Target<Drawable>?,
-                                isFirstResource: Boolean
-                            ): Boolean {
-                                setVisibility(isError = true)
-                                return false
-                            }
-
-                            override fun onResourceReady(
-                                resource: Drawable?,
-                                model: Any?,
-                                target: Target<Drawable>?,
-                                dataSource: DataSource?,
-                                isFirstResource: Boolean
-                            ): Boolean {
-                                setVisibility(isSuccess = true)
-                                return false
-                            }
-                        })
-                        .into(image)
-
-                    description.text = item.description
-
-                    setButtonListeners(item.id)
-                }
-                Status.ERROR -> {
-                    setVisibility(isError = true)
-                }
-                Status.LOADING -> {
-                    setVisibility(isLoading = true)
-                }
-            }
-        }
+        viewModel.itemLiveData.observe(viewLifecycleOwner, liveDataObserver)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(App.SECTION_TYPE_KEY, sectionType.ordinal)
         currentId?.let { outState.putInt(App.CURRENT_ID_KEY, it) }
-    }
-
-    private fun setVisibility(isSuccess: Boolean = false, isError: Boolean = false, isLoading: Boolean = false) {
-        successHolder.isVisible = isSuccess
-        errorHolder.isVisible = isError
-        progressBar.isVisible = isLoading
-    }
-
-    private fun setButtonListeners(currentId: Int) {
-        previousButton.setOnClickListener { viewModel.loadPrevious(currentId, sectionType) }
-        nextButton.setOnClickListener { viewModel.loadNext(currentId, sectionType) }
     }
 
     private fun restoreData(savedInstanceState: Bundle?) {
@@ -162,6 +119,43 @@ class ItemFragment : Fragment() {
         currentId = savedInstanceState?.getInt(App.CURRENT_ID_KEY)
         if (currentId == 0) {
             currentId = null
+        }
+    }
+
+    private fun loadInitialData() {
+        if (currentId == null) {
+            viewModel.loadLast(sectionType)
+        } else {
+            viewModel.loadCurrent(currentId!!, sectionType)
+        }
+    }
+
+    private fun setVisibility(isSuccess: Boolean = false, isError: Boolean = false, isLoading: Boolean = false) {
+        successHolder.isVisible = isSuccess
+        errorHolder.isVisible = isError
+        progressBar.isVisible = isLoading
+    }
+
+    private val glideListener = object : RequestListener<Drawable> {
+        override fun onLoadFailed(
+            e: GlideException?,
+            model: Any?,
+            target: Target<Drawable>?,
+            isFirstResource: Boolean
+        ): Boolean {
+            setVisibility(isError = true)
+            return false
+        }
+
+        override fun onResourceReady(
+            resource: Drawable?,
+            model: Any?,
+            target: Target<Drawable>?,
+            dataSource: DataSource?,
+            isFirstResource: Boolean
+        ): Boolean {
+            setVisibility(isSuccess = true)
+            return false
         }
     }
 

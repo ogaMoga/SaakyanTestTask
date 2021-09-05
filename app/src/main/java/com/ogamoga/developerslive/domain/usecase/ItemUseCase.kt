@@ -7,7 +7,7 @@ import com.ogamoga.developerslive.exception.DatabaseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class UseCase(
+class ItemUseCase(
     private val localRepository: LocalRepository,
     private val remoteRepository: RemoteRepository
 ) {

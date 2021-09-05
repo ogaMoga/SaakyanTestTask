@@ -7,11 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.ogamoga.developerslive.domain.model.ItemResource
 import com.ogamoga.developerslive.domain.model.SectionType
 import com.ogamoga.developerslive.domain.model.Status
-import com.ogamoga.developerslive.domain.usecase.UseCase
+import com.ogamoga.developerslive.domain.usecase.ItemUseCase
 import kotlinx.coroutines.launch
 
 class ItemViewModel(
-    private val useCase: UseCase,
+    private val useCase: ItemUseCase,
 ) : ViewModel() {
     private val _itemLiveData = MutableLiveData<ItemResource>()
 

@@ -57,7 +57,6 @@ class LocalRepository(
         }
 
         var nextId: Int? = null
-
         for (item in items.reversed()) {
             resultItems.add(
                 ItemsEntity(

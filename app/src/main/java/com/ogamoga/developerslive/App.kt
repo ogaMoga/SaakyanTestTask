@@ -12,6 +12,8 @@ class App: Application() {
     companion object {
         const val SECTION_TYPE_KEY = "section_id"
         const val CURRENT_ID_KEY = "current_item_id"
+        const val IS_DARK_MODE = "DARK_MODE"
+        const val DARK_MODE_KEY = "dark_mode"
     }
 
     override fun onCreate() {

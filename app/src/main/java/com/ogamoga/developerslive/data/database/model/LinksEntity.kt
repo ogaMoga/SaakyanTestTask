@@ -2,8 +2,6 @@ package com.ogamoga.developerslive.data.database.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
-import com.ogamoga.developerslive.data.database.model.ItemsEntity
 import com.ogamoga.developerslive.domain.model.SectionType
 
 @Entity(
