@@ -2,12 +2,12 @@ package com.ogamoga.developerslive.domain.model
 
 import com.google.gson.annotations.SerializedName
 
-data class ApiResponse (
-    @SerializedName("result") val result : List<ApiResult>,
+data class ApiPage (
+    @SerializedName("result") val result : List<ApiItem>,
     @SerializedName("totalCount") val totalCount : Int
 )
 
-data class ApiResult (
+data class ApiItem (
     @SerializedName("id") val id : Int,
     @SerializedName("description") val description : String,
     @SerializedName("gifURL") val gifURL : String,

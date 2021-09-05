@@ -5,5 +5,5 @@
     <string name="error_btn">Try again</string>
     <string name="latest_tab_title">Latest</string>
     <string name="top_tab_title">Top</string>
-    <string name="hot_tab_title">Hot</string>
+    <string name="random_tab_title">Random</string>
 </resources>

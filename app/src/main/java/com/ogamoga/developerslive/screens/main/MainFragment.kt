@@ -43,7 +43,7 @@ class MainFragment : Fragment() {
             tab.text = when (position) {
                 0 -> getString(R.string.latest_tab_title)
                 1 -> getString(R.string.top_tab_title)
-                2 -> getString(R.string.hot_tab_title)
+                2 -> getString(R.string.random_tab_title)
                 else -> ""
             }
         }.attach()
