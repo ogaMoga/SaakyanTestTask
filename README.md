@@ -1,7 +1,18 @@
-# DevelopersLife
-Тестовое задание для курсов Tinkoff Fintech Android. Мобильный клиент для сайта developerslife.ru<br/>
-Позволяет смотреть gif-мемы из категорий latest, top, а также случайные посты (вкладки hot нет, так как этот раздел сайта пуст).<br/> 
-Между просмотренными постами можно навигироваться вперед-назад в порядке просмотра.<br/>
-После запросов к API данные о постах заносятся в базу данных, gif-анимации кэшируются. <br/>
-Реализована темная тема с кнопкой переключения. Английская и русская локализации.<br/>
-Архитектура MVVM. Стек: Kotlin, Retrofit 2, Room, Koin, Glide
+# Developers Life
+## This is test task for Tinkoff Fintech Android school
+
+### About app 
+* This is mobile client for [Developers life](https://www.developerslife.ru)
+* Application allows to watch gif-memes from latest, top, random sections and navigate between memes in loading order. All data are cached.
+* Dark theme and russian localization are available
+
+### Architecture
+* This app are using MVVM architecture
+* Also I implement DI Architecture Pattern with Koin
+
+### Stack
+* _Kotlin_ for write all code
+* _Retrofit 2_ for network requests
+* _Room_ for work with database
+* _Koin_ for implement Dependency Injection Pattern
+* _Glide_ for load, show and cache gif-images
